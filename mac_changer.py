@@ -3,6 +3,7 @@
 import subprocess
 import optparse
 import re
+import random
 
 def get_arguments():
     parser = optparse.OptionParser()
@@ -13,7 +14,9 @@ def get_arguments():
         parser.error("[-] Please specify an interface, use --help for more info.")
 
     if not options.new_mac:
-        parser.error("[-] Please specify a new mac, use --help for more info.")
+        #parser.error("[-] Please specify a new mac, use --help for more info.")
+        #implement random mac address generator
+        options.new_mac = random_mac()
     return options
 
 def change_mac(interface, new_mac):
@@ -31,6 +34,11 @@ def get_current_mac(interface):
          return mac_result.group(0)
     else:
         print("[-] could not read mac address")
+
+def random_mac():
+    mac = [0x00, 0x16, 0x3e, random.randint(0x00, 0x7f), random.randint(0x00, 0xff), random.randint(0x00, 0xff)]
+    return ':'.join(map(lambda x: "%02x" % x, mac))
+
 
 options = get_arguments()
 current_mac = get_current_mac(options.interface)
